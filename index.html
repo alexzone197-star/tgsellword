@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeleMarket | Telegram Group Marketplace & Instant Access</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        tg: {
+                            dark: '#080C14',
+                            card: '#111827',
+                            cardBorder: '#1F293D',
+                            blue: '#0088cc',
+                            cyan: '#24A1DE',
+                            accent: '#00D2FF',
+                            gold: '#FFD700'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080C14;
+            color: #F1F5F9;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080C14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0088cc;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(31, 41, 61, 0.7);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(0, 136, 204, 0.4);
+        }
+
+        .glass-nav {
+            background: rgba(8, 12, 20, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(31, 41, 61, 0.6);
+        }
+
+        .glow-accent {
+            box-shadow: 0 0 25px -5px rgba(0, 136, 204, 0.35);
+        }
+
+        .glow-emerald {
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.35);
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        .animate-pulse-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        /* Progress Bar Animation */
+        @keyframes progressStripes {
+            from { background-position: 1rem 0; }
+            to { background-position: 0 0; }
+        }
+
+        .progress-striped {
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+            background-size: 1rem 1rem;
+            animation: progressStripes 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-tg-cyan selection:text-black">
+
+    <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Brand Logo -->
+                <a href="#" onclick="switchView('public')" class="flex items-center space-x-3 shrink-0 group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-tg-blue via-tg-cyan to-tg-accent flex items-center justify-center text-white shadow-lg shadow-tg-blue/30 group-hover:scale-105 transition-transform">
+                        <i class="fa-brands fa-telegram text-2xl font-bold"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-xl font-black tracking-tight text-white">TeleMarket</span>
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-tg-blue/20 text-tg-cyan border border-tg-blue/40 uppercase">PRO</span>
+                        </div>
+                        <p class="text-[10px] font-semibold tracking-wide text-slate-400">Telegram Communities & Access Hub</p>
+                    </div>
+                </a>
+
+                <!-- Desktop Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-md mx-4">
+                    <div class="relative w-full">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="topNavSearch" oninput="syncNavSearch(this.value)" placeholder="Search Telegram groups, channels..." class="w-full pl-9 pr-4 py-2 bg-slate-900/90 border border-tg-cardBorder rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-tg-cyan transition-all">
+                    </div>
+                </div>
+
+                <!-- Navigation Actions -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="switchView('public')" id="navMarketBtn" class="px-3.5 py-2 rounded-xl text-xs font-bold text-tg-cyan bg-tg-blue/10 border border-tg-blue/30 transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-store"></i>
+                        <span class="hidden sm:inline">Marketplace</span>
+                    </button>
+
+                    <button onclick="switchView('orders')" id="navOrdersBtn" class="relative px-3.5 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-slate-900 border border-tg-cardBorder hover:bg-slate-800 transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-bag-shopping text-tg-cyan"></i>
+                        <span class="hidden sm:inline">My Orders</span>
+                        <span id="userOrdersCountBadge" class="hidden ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-500 text-black font-black">0</span>
+                    </button>
+
+                    <button onclick="toggleAdminPanel()" id="adminToggleBtn" class="px-3.5 py-2 rounded-xl text-xs font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span id="adminToggleText" class="hidden sm:inline">Admin Panel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="publicView" class="flex-grow">
+        
+        <!-- Hero Section -->
+        <section class="relative py-12 md:py-16 overflow-hidden">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-tg-blue/15 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-3xl mx-auto">
+                    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-tg-blue/40 text-tg-cyan text-xs font-bold mb-6 shadow-lg">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span>⚡ 2-Minute Automated Telegram Access Delivery</span>
+                    </div>
+
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight mb-4">
+                        Discover & Join Premier <br>
+                        <span class="bg-gradient-to-r from-tg-cyan via-sky-400 to-emerald-400 bg-clip-text text-transparent">
+                            Telegram Communities
+                        </span>
+                    </h1>
+
+                    <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto mb-8">
+                        Buy instant private group & channel access via UPI. QR code scan karein, UTR submit karein aur <span class="text-emerald-400 font-bold">2 minute me direct invite link receive karein!</span>
+                    </p>
+
+                    <!-- Stat Counters -->
+                    <div class="grid grid-cols-3 gap-3 max-w-xl mx-auto p-3 rounded-2xl glass-panel border border-tg-cardBorder">
+                        <div class="text-center p-2">
+                            <div id="statActiveGroups" class="text-xl sm:text-2xl font-black text-white">0</div>
+                            <div class="text-[10px] sm:text-xs text-slate-400 font-medium">Active Groups</div>
+                        </div>
+                        <div class="text-center p-2 border-x border-tg-cardBorder">
+                            <div id="statTotalMembers" class="text-xl sm:text-2xl font-black text-tg-cyan">0</div>
+                            <div class="text-[10px] sm:text-xs text-slate-400 font-medium">Total Audience</div>
+                        </div>
+                        <div class="text-center p-2">
+                            <div class="text-xl sm:text-2xl font-black text-emerald-400">120s</div>
+                            <div class="text-[10px] sm:text-xs text-slate-400 font-medium">Avg Access Time</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-6 border-y border-tg-cardBorder bg-slate-950/60 sticky top-20 z-30 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    
+                    <!-- Category Pills -->
+                    <div class="flex items-center space-x-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-none" id="categoryPills">
+                        <button onclick="setCategoryFilter('All')" class="cat-pill active px-4 py-2 rounded-xl text-xs font-bold bg-tg-blue text-white shadow-lg whitespace-nowrap transition-all">
+                            🌟 All Categories
+                        </button>
+                        <button onclick="setCategoryFilter('Entertainment')" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-tg-cardBorder whitespace-nowrap transition-all">
+                            🎬 Entertainment
+                        </button>
+                        <button onclick="setCategoryFilter('Gaming')" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-tg-cardBorder whitespace-nowrap transition-all">
+                            🎮 Gaming
+                        </button>
+                        <button onclick="setCategoryFilter('Education')" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-tg-cardBorder whitespace-nowrap transition-all">
+                            📚 Education
+                        </button>
+                        <button onclick="setCategoryFilter('Business')" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-tg-cardBorder whitespace-nowrap transition-all">
+                            💼 Business
+                        </button>
+                        <button onclick="setCategoryFilter('Crypto')" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-tg-cardBorder whitespace-nowrap transition-all">
+                            🚀 Crypto & Tech
+                        </button>
+                    </div>
+
+                    <!-- Sorting & Search Control Bar -->
+                    <div class="flex items-center space-x-3 justify-between lg:justify-end">
+                        <div class="relative min-w-[180px]">
+                            <select id="sortSelect" onchange="renderPublicListings()" class="w-full pl-3 pr-8 py-2 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs font-semibold text-slate-200 focus:outline-none focus:border-tg-cyan">
+                                <option value="popular">🔥 Most Popular</option>
+                                <option value="price-low">💰 Price: Low to High</option>
+                                <option value="price-high">💎 Price: High to Low</option>
+                                <option value="members">👥 Member Count</option>
+                            </select>
+                        </div>
+                        <span id="filteredCountBadge" class="text-xs font-semibold text-slate-400 bg-slate-900 px-3 py-2 rounded-xl border border-tg-cardBorder whitespace-nowrap">
+                            0 Groups
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div id="listingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards dynamically injected here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyListings" class="hidden text-center py-16 px-4 glass-panel rounded-3xl border border-tg-cardBorder max-w-lg mx-auto">
+                    <div class="w-16 h-16 rounded-2xl bg-slate-900 text-slate-500 flex items-center justify-center text-3xl mx-auto mb-4">
+                        <i class="fa-solid fa-ghost"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">No Telegram Groups Found</h3>
+                    <p class="text-xs text-slate-400 mt-1">Try changing your search keywords or switching category filters.</p>
+                    <button onclick="resetFilters()" class="mt-5 px-5 py-2.5 rounded-xl bg-tg-blue text-white text-xs font-bold hover:bg-tg-cyan transition-colors">
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-slate-950/80 border-t border-tg-cardBorder">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-xl mx-auto mb-10">
+                    <span class="text-[10px] font-extrabold tracking-widest text-tg-cyan uppercase">Instant Automated Fulfillment</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">⚡ HOW 2-MINUTE ACCESS WORKS</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-tg-cardBorder relative">
+                        <div class="w-10 h-10 rounded-xl bg-tg-blue/20 text-tg-cyan flex items-center justify-center text-lg font-bold mb-4">1</div>
+                        <h3 class="text-base font-bold text-white mb-1">Select & Scan UPI QR</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">Choose your group, click "Buy Access", and scan the generated UPI QR Code using Google Pay, PhonePe, Paytm, or BHIM app.</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-tg-cardBorder relative">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg font-bold mb-4">2</div>
+                        <h3 class="text-base font-bold text-white mb-1">Submit UTR Ref Number</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">Enter your 12-digit UPI UTR transaction reference number from your payment app screenshot to initiate instant verification.</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-tg-cardBorder relative">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg font-bold mb-4">3</div>
+                        <h3 class="text-base font-bold text-white mb-1">Get Direct Link in 2 Min</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">Our automated system processes your UTR within 120 seconds and unlocks your single-use Telegram private invite link directly on screen!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="myOrdersView" class="hidden flex-grow py-10">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-8 pb-4 border-b border-tg-cardBorder">
+                <div>
+                    <h1 class="text-2xl font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-bag-shopping text-tg-cyan"></i>
+                        <span>My Telegram Access Orders</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 mt-1">Track your pending payments and retrieve your purchased Telegram invite links.</p>
+                </div>
+                <button onclick="switchView('public')" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs font-bold text-slate-300 border border-tg-cardBorder">
+                    ← Back to Market
+                </button>
+            </div>
+
+            <div id="userOrdersList" class="space-y-4">
+                <!-- User orders dynamically populated -->
+            </div>
+        </div>
+    </main>
+
+    <main id="adminView" class="hidden flex-grow py-8 bg-slate-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Admin Top Bar -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-tg-cardBorder">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-2xl font-black text-white">🛠️ ADMIN CONTROL PANEL</h1>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/40">SUPER ADMIN</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1">Configure UPI payment settings, create group listings, and approve purchase requests.</p>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <button onclick="openAddGroupModal()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs shadow-lg shadow-emerald-900/30 flex items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>+ Add New Group</span>
+                    </button>
+                    <button onclick="switchView('public')" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-tg-cardBorder text-slate-300 hover:text-white text-xs font-bold">
+                        Exit Admin
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Key Stats Grid -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="glass-panel p-5 rounded-2xl border border-tg-cardBorder">
+                    <div class="text-xs text-slate-400 font-semibold mb-1">Total Sales Revenue</div>
+                    <div id="admRevTotal" class="text-2xl font-black text-emerald-400">₹0</div>
+                    <div class="text-[10px] text-slate-500 mt-1">From approved orders</div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl border border-tg-cardBorder">
+                    <div class="text-xs text-slate-400 font-semibold mb-1">Total Listings</div>
+                    <div id="admListingsCount" class="text-2xl font-black text-tg-cyan">0</div>
+                    <div class="text-[10px] text-slate-500 mt-1">Group channels</div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl border border-tg-cardBorder">
+                    <div class="text-xs text-slate-400 font-semibold mb-1">Pending Verification</div>
+                    <div id="admPendingCount" class="text-2xl font-black text-amber-400">0</div>
+                    <div class="text-[10px] text-slate-500 mt-1">Awaiting UTR approval</div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl border border-tg-cardBorder">
+                    <div class="text-xs text-slate-400 font-semibold mb-1">Completed Access Grants</div>
+                    <div id="admCompletedCount" class="text-2xl font-black text-blue-400">0</div>
+                    <div class="text-[10px] text-slate-500 mt-1">Successful deliveries</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                
+                <!-- UPI Settings Card -->
+                <div class="glass-panel p-6 rounded-2xl border border-tg-cardBorder lg:col-span-1">
+                    <div class="flex items-center space-x-3 mb-4 pb-3 border-b border-tg-cardBorder">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">UPI Payment Settings</h3>
+                            <p class="text-[11px] text-slate-400">Manage payment recipient details</p>
+                        </div>
+                    </div>
+
+                    <form id="adminUpiForm" onsubmit="saveAdminUpiSettings(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Admin UPI ID *</label>
+                            <input type="text" id="admUpiId" required placeholder="e.g. telemarket@upi" class="w-full px-3.5 py-2.5 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Payee Business Name *</label>
+                            <input type="text" id="admPayeeName" required placeholder="e.g. TeleMarket Admin" class="w-full px-3.5 py-2.5 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan">
+                        </div>
+
+                        <!-- Live QR Code Preview -->
+                        <div class="p-4 rounded-xl bg-slate-900 border border-tg-cardBorder text-center">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Live Dynamic QR Generator Preview</p>
+                            <img id="admQrPreviewImg" src="" alt="UPI QR Preview" class="w-36 h-36 mx-auto rounded-lg bg-white p-1 shadow">
+                            <p id="admUpiPreviewText" class="text-[11px] font-mono text-tg-cyan mt-2">telemarket@upi</p>
+                        </div>
+
+                        <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg transition-colors">
+                            💾 Save UPI Settings
+                        </button>
+                    </form>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-tg-cardBorder lg:col-span-2">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-tg-cardBorder">
+                        <div>
+                            <h3 class="text-base font-bold text-white">Group Listings Directory</h3>
+                            <p class="text-[11px] text-slate-400">Manage active marketplace channels and links</p>
+                        </div>
+                        <button onclick="openAddGroupModal()" class="px-3 py-1.5 rounded-lg bg-tg-blue hover:bg-tg-cyan text-white text-xs font-bold">
+                            + Add Group
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto max-h-[380px] overflow-y-auto">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-slate-900 text-slate-400 uppercase text-[10px] font-extrabold tracking-wider sticky top-0">
+                                <tr>
+                                    <th class="py-3 px-3">Title</th>
+                                    <th class="py-3 px-3">Category</th>
+                                    <th class="py-3 px-3">Members</th>
+                                    <th class="py-3 px-3">Price</th>
+                                    <th class="py-3 px-3">Status</th>
+                                    <th class="py-3 px-3 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admListingsTableBody" class="divide-y divide-tg-cardBorder">
+                                <!-- Listings rows dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl border border-tg-cardBorder">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-tg-cardBorder">
+                    <div>
+                        <h3 class="text-base font-bold text-white">User Purchase Requests & UTR Verification</h3>
+                        <p class="text-[11px] text-slate-400">Review payment UTRs and manage group access approvals</p>
+                    </div>
+                    <span id="pendingOrdersAlert" class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 text-xs font-bold">
+                        0 Action Required
+                    </span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900 text-slate-400 uppercase text-[10px] font-extrabold tracking-wider border-b border-tg-cardBorder">
+                            <tr>
+                                <th class="py-3.5 px-4">Order ID</th>
+                                <th class="py-3.5 px-4">Buyer Telegram</th>
+                                <th class="py-3.5 px-4">Group Name</th>
+                                <th class="py-3.5 px-4">Price</th>
+                                <th class="py-3.5 px-4">UTR Ref Number</th>
+                                <th class="py-3.5 px-4">Status</th>
+                                <th class="py-3.5 px-4 text-right">Approval Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admOrdersTableBody" class="divide-y divide-tg-cardBorder">
+                            <!-- Orders rows dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-slate-950 border-t border-tg-cardBorder py-8 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <i class="fa-brands fa-telegram text-tg-cyan text-lg"></i>
+                <span class="text-slate-300 font-bold">TeleMarket Hub</span>
+                <span>© 2026. Automated Access Delivery.</span>
+            </div>
+            <div class="flex space-x-6 text-slate-400">
+                <a href="#" class="hover:text-tg-cyan">Terms of Service</a>
+                <a href="#" class="hover:text-tg-cyan">Privacy Policy</a>
+                <a href="#" class="hover:text-tg-cyan">Telegram Support</a>
+            </div>
+        </div>
+    </footer>
+
+    
+    <!-- 1. Group Details Modal -->
+    <div id="detailsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="glass-panel max-w-lg w-full rounded-2xl border border-tg-cardBorder p-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('detailsModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center space-x-4 mb-4">
+                <img id="detailImg" src="" alt="Group Logo" class="w-16 h-16 rounded-2xl object-cover bg-slate-800 border border-tg-cardBorder">
+                <div>
+                    <span id="detailCat" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-tg-blue/20 text-tg-cyan border border-tg-blue/40 uppercase">Category</span>
+                    <h3 id="detailTitle" class="text-lg font-bold text-white mt-1 leading-snug">Group Title</h3>
+                    <p id="detailMembers" class="text-xs text-slate-400 font-medium mt-0.5">0 members</p>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-900 border border-tg-cardBorder mb-4 space-y-2">
+                <h4 class="text-xs font-bold text-slate-300">About Channel & Community:</h4>
+                <p id="detailDesc" class="text-xs text-slate-300 leading-relaxed">Description goes here...</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-tg-cardBorder">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Fulfillment Method</span>
+                    <span class="text-xs font-bold text-emerald-400">⚡ 2-Min Live Delivery</span>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-tg-cardBorder">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Access Type</span>
+                    <span class="text-xs font-bold text-white">Private Invite Link</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-tg-cardBorder">
+                <div>
+                    <span class="text-[10px] text-slate-400 block font-semibold">Total Price</span>
+                    <span id="detailPrice" class="text-xl font-extrabold text-emerald-400">₹0</span>
+                </div>
+                <button id="detailBuyBtn" onclick="" class="px-6 py-3 rounded-xl bg-gradient-to-r from-tg-blue to-tg-cyan hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-tg-blue/30">
+                    Buy Access Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Multi-Step Checkout Modal -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+        <div class="glass-panel max-w-md w-full rounded-3xl border border-tg-cardBorder p-6 relative max-h-[95vh] overflow-y-auto">
+            <button onclick="closeModal('checkoutModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-tg-blue to-tg-cyan flex items-center justify-center text-white text-xl mx-auto mb-2 shadow-lg shadow-tg-blue/30">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-lg font-extrabold text-white">Instant Access Checkout</h3>
+                <p id="checkoutGroupTitle" class="text-xs font-semibold text-tg-cyan">Group Title</p>
+            </div>
+
+            <!-- Step Progress Indicator -->
+            <div class="flex items-center justify-center space-x-2 mb-6">
+                <div id="stepDot1" class="w-8 h-2 rounded-full bg-tg-cyan"></div>
+                <div id="stepDot2" class="w-8 h-2 rounded-full bg-slate-800"></div>
+                <div id="stepDot3" class="w-8 h-2 rounded-full bg-slate-800"></div>
+            </div>
+
+            <!-- STEP 1: User Info Input -->
+            <div id="checkoutStep1" class="space-y-4">
+                <div class="p-3.5 rounded-xl bg-slate-900 border border-tg-cardBorder flex justify-between items-center">
+                    <span class="text-xs text-slate-300 font-semibold">Payable Amount:</span>
+                    <span id="step1Price" class="text-lg font-black text-emerald-400">₹0</span>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Your Telegram Username (@handle) *</label>
+                    <div class="relative">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-xs">@</span>
+                        <input type="text" id="chkTgHandle" placeholder="username_tg" required class="w-full pl-8 pr-3.5 py-2.5 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-tg-cyan">
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">This handle will be authorized for group entry.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Email / WhatsApp Contact (Optional)</label>
+                    <input type="text" id="chkContact" placeholder="email@domain.com or phone" class="w-full px-3.5 py-2.5 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-tg-cyan">
+                </div>
+
+                <button onclick="goToCheckoutStep2()" class="w-full py-3 rounded-xl bg-gradient-to-r from-tg-blue to-tg-cyan text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-tg-blue/30">
+                    Proceed to UPI Payment →
+                </button>
+            </div>
+
+            <!-- STEP 2: UPI QR Payment & UTR Input -->
+            <div id="checkoutStep2" class="hidden space-y-4">
+                <div class="text-center p-4 rounded-2xl bg-slate-900 border border-tg-cardBorder">
+                    <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-800">
+                        <span class="text-xs text-slate-400 font-semibold">Amount to Pay:</span>
+                        <span id="step2Price" class="text-xl font-black text-emerald-400">₹0</span>
+                    </div>
+
+                    <!-- Scannable UPI QR Code Image -->
+                    <div class="relative w-44 h-44 mx-auto my-3 bg-white p-2 rounded-2xl shadow-xl">
+                        <img id="upiQrImg" src="" alt="UPI Payment QR" class="w-full h-full object-contain">
+                    </div>
+
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+                        <span class="text-slate-400 font-mono" id="upiIdDisplay">telemarket@upi</span>
+                        <button onclick="copyUpiId()" class="px-2.5 py-1 rounded-lg bg-tg-blue/20 hover:bg-tg-blue/40 text-tg-cyan font-bold text-[10px] flex items-center gap-1">
+                            <i class="fa-solid fa-copy"></i> Copy
+                        </button>
+                    </div>
+
+                    <!-- Direct App Intent Link -->
+                    <a id="payAppBtn" href="#" class="inline-flex items-center space-x-2 text-[11px] font-bold text-tg-cyan mt-3 hover:underline">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                        <span>Click to Pay via GPay / PhonePe / Paytm</span>
+                    </a>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Enter 12-Digit UPI UTR / Transaction Ref No. *</label>
+                    <input type="text" id="chkUtrInput" maxlength="12" placeholder="e.g. 426819038201" required class="w-full px-3.5 py-2.5 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-tg-cyan">
+                    <p class="text-[10px] text-amber-400 mt-1"><i class="fa-solid fa-circle-info mr-1"></i>Check your UPI app transaction history for 12-digit Ref / UTR number.</p>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button onclick="showCheckoutStep(1)" class="w-1/3 py-3 rounded-xl bg-slate-900 text-slate-300 font-bold text-xs hover:bg-slate-800 border border-tg-cardBorder">
+                        ← Back
+                    </button>
+                    <button onclick="submitPaymentUtr()" class="w-2/3 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-900/30">
+                        Submit Payment & Deliver Link
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Automated Processing & Live 2-Minute Timer -->
+            <div id="checkoutStep3" class="hidden text-center space-y-5">
+                <div id="countdownBox" class="p-6 rounded-2xl bg-slate-900 border border-tg-cardBorder">
+                    <span class="text-[10px] font-extrabold tracking-widest text-tg-cyan uppercase block mb-1">AUTOMATED LINK FULFILLMENT</span>
+                    <div id="timerDisplay" class="text-4xl font-black font-mono text-emerald-400 my-2">02:00</div>
+                    <p class="text-xs text-slate-300 font-medium">Verifying UTR <span id="displaySubmittedUtr" class="font-mono text-tg-cyan">...</span></p>
+
+                    <!-- Animated Progress Bar -->
+                    <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden my-4 border border-slate-800">
+                        <div id="timerProgressBar" class="h-full bg-gradient-to-r from-tg-blue via-tg-cyan to-emerald-400 progress-striped w-0 transition-all duration-1000"></div>
+                    </div>
+
+                    <p id="timerStatusText" class="text-[11px] text-slate-400 font-medium animate-pulse">
+                        🔄 Step 1/3: Checking UPI gateway confirmation...
+                    </p>
+                </div>
+
+                <!-- Unlocked Link Box (Hidden initially) -->
+                <div id="unlockedLinkCard" class="hidden p-5 rounded-2xl bg-emerald-950/60 border border-emerald-500/50 text-left space-y-3">
+                    <div class="flex items-center space-x-2 text-emerald-400 text-xs font-extrabold">
+                        <i class="fa-solid fa-circle-check text-base"></i>
+                        <span>ACCESS GRANTED SUCCESSFULLY!</span>
+                    </div>
+
+                    <p class="text-xs text-slate-200">Your unique single-use invite link is ready. Click below to join the group immediately:</p>
+
+                    <div class="p-3 rounded-xl bg-slate-950 border border-emerald-500/30 flex items-center justify-between">
+                        <span id="revealedInviteLink" class="text-xs font-mono text-tg-cyan truncate pr-2">https://t.me/+SampleGroupLink</span>
+                        <button onclick="copyRevealedLink()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs shrink-0">
+                            Copy Link
+                        </button>
+                    </div>
+
+                    <a id="joinGroupDirectBtn" href="#" target="_blank" class="w-full py-3 rounded-xl bg-gradient-to-r from-tg-blue to-tg-cyan text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 shadow-lg shadow-tg-blue/40">
+                        <i class="fa-brands fa-telegram text-base"></i>
+                        <span>JOIN TELEGRAM GROUP NOW</span>
+                    </a>
+                </div>
+
+                <div id="step3FooterBtns" class="flex justify-between items-center pt-2">
+                    <button onclick="switchView('orders'); closeModal('checkoutModal');" class="text-xs text-tg-cyan hover:underline font-semibold">
+                        View in My Orders →
+                    </button>
+                    <button onclick="closeModal('checkoutModal')" class="px-4 py-2 rounded-xl bg-slate-900 text-slate-400 text-xs font-bold hover:text-white">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 3. Add / Edit Group Modal (Admin) -->
+    <div id="addGroupModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+        <div class="glass-panel max-w-lg w-full rounded-2xl border border-tg-cardBorder p-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('addGroupModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 id="groupModalHeading" class="text-lg font-bold text-white mb-4">➕ Add Telegram Group</h3>
+
+            <form id="groupForm" onsubmit="handleSaveGroup(event)" class="space-y-3.5">
+                <input type="hidden" id="grpEditId">
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Group Title *</label>
+                    <input type="text" id="grpTitle" required placeholder="e.g. Crypto Alpha Signals HQ" class="w-full px-3.5 py-2 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Category *</label>
+                        <select id="grpCategory" required class="w-full px-3.5 py-2 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan">
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Gaming">Gaming</option>
+                            <option value="Education">Education</option>
+                            <option value="Business">Business</option>
+                            <option value="Crypto">Crypto & Tech</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Member Count *</label>
+                        <input type="number" id="grpMembers" required placeholder="25000" class="w-full px-3.5 py-2 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Price (₹) *</label>
+                        <input type="number" id="grpPrice" required placeholder="1499" class="w-full px-3.5 py-2 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Verified Badge</label>
+                        <select id="grpVerified" class="w-full px-3.5 py-2 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan">
+                            <option value="true">Verified (Yes)</option>
+                            <option value="false">Standard (No)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Telegram Private Invite Link *</label>
+                    <input type="text" id="grpInviteLink" required placeholder="https://t.me/+abcdef123456" class="w-full px-3.5 py-2 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Group Logo Image URL (Optional)</label>
+                    <input type="text" id="grpLogoUrl" placeholder="https://..." class="w-full px-3.5 py-2 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Description *</label>
+                    <textarea id="grpDesc" rows="3" required placeholder="Provide audience demographics, activity stats, post reach..." class="w-full px-3.5 py-2 bg-slate-900 border border-tg-cardBorder rounded-xl text-xs text-white focus:outline-none focus:border-tg-cyan"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeModal('addGroupModal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-tg-blue hover:bg-tg-cyan text-white text-xs font-bold">Save Group Listing</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <script>
+        const DEFAULT_LISTINGS = [
+            {
+                id: 'grp-101',
+                title: 'Crypto Alpha & Web3 Signals',
+                category: 'Crypto',
+                members: 34200,
+                price: 1999,
+                inviteLink: 'https://t.me/+CryptoAlphaVIPSample',
+                logoUrl: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=150&auto=format&fit=crop&q=80',
+                desc: 'Premium insider updates, chart analysis, and daily bitcoin calls. 90% active Indian traders.',
+                verified: true,
+                status: 'Active'
+            },
+            {
+                id: 'grp-102',
+                title: 'Daily Movie Leaks & OTT Buzz',
+                category: 'Entertainment',
+                members: 98500,
+                price: 999,
+                inviteLink: 'https://t.me/+MovieOttVIPSample',
+                logoUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=150&auto=format&fit=crop&q=80',
+                desc: 'Massive viral audience with high link engagement. Ideal for brand promotions and monetization.',
+                verified: true,
+                status: 'Active'
+            },
+            {
+                id: 'grp-103',
+                title: 'BGMI & Esport Scrims Hub',
+                category: 'Gaming',
+                members: 45000,
+                price: 1299,
+                inviteLink: 'https://t.me/+EsportGamersVIPSample',
+                logoUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&auto=format&fit=crop&q=80',
+                desc: 'Custom scrims hosting, daily tournaments, and gaming gear deals. Super active gaming community.',
+                verified: true,
+                status: 'Active'
+            },
+            {
+                id: 'grp-104',
+                title: 'UPSC & Govt Exams Prep Circle',
+                category: 'Education',
+                members: 112000,
+                price: 2499,
+                inviteLink: 'https://t.me/+UpscPrepVIPSample',
+                logoUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=150&auto=format&fit=crop&q=80',
+                desc: 'Daily editorial analysis, current affairs PDFs, and competitive exam quiz series.',
+                verified: true,
+                status: 'Active'
+            },
+            {
+                id: 'grp-105',
+                title: 'Startup Founders & Pitch Room',
+                category: 'Business',
+                members: 21000,
+                price: 3499,
+                inviteLink: 'https://t.me/+FoundersRoomVIPSample',
+                logoUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=150&auto=format&fit=crop&q=80',
+                desc: 'HNI founders, angel investors, and SaaS builders. High trust business community.',
+                verified: true,
+                status: 'Active'
+            }
+        ];
+
+        const DEFAULT_UPI_SETTINGS = {
+            upiId: 'telemarket@upi',
+            payeeName: 'TeleMarket Admin'
+        };
+
+        const DEFAULT_ORDERS = [
+            {
+                orderId: 'ORD-7102',
+                groupId: 'grp-101',
+                groupTitle: 'Crypto Alpha & Web3 Signals',
+                price: 1999,
+                tgHandle: 'alex_crypto',
+                contact: 'alex@domain.com',
+                utr: '426819038201',
+                status: 'Approved',
+                inviteLink: 'https://t.me/+CryptoAlphaVIPSample',
+                timestamp: Date.now() - 3600000
+            }
+        ];
+
+        let listings = [];
+        let upiSettings = {};
+        let orders = [];
+        let currentCategory = 'All';
+        let searchQuery = '';
+        let currentActiveCheckoutOrder = null;
+        let checkoutTimerInterval = null;
+
+        function loadApplicationState() {
+            try {
+                const storedListings = localStorage.getItem('tm_listings');
+                const storedUpi = localStorage.getItem('tm_upi_settings');
+                const storedOrders = localStorage.getItem('tm_orders');
+
+                listings = storedListings ? JSON.parse(storedListings) : DEFAULT_LISTINGS;
+                upiSettings = storedUpi ? JSON.parse(storedUpi) : DEFAULT_UPI_SETTINGS;
+                orders = storedOrders ? JSON.parse(storedOrders) : DEFAULT_ORDERS;
+            } catch (e) {
+                listings = DEFAULT_LISTINGS;
+                upiSettings = DEFAULT_UPI_SETTINGS;
+                orders = DEFAULT_ORDERS;
+            }
+        }
+
+        function saveApplicationState() {
+            try {
+                localStorage.setItem('tm_listings', JSON.stringify(listings));
+                localStorage.setItem('tm_upi_settings', JSON.stringify(upiSettings));
+                localStorage.setItem('tm_orders', JSON.stringify(orders));
+            } catch (e) {
+                console.error('State saving failed:', e);
+            }
+            updateHeaderBadgesAndStats();
+        }
+
+        function switchView(viewName) {
+            const publicView = document.getElementById('publicView');
+            const myOrdersView = document.getElementById('myOrdersView');
+            const adminView = document.getElementById('adminView');
+
+            publicView.classList.add('hidden');
+            myOrdersView.classList.add('hidden');
+            adminView.classList.add('hidden');
+
+            if (viewName === 'public') {
+                publicView.classList.remove('hidden');
+                renderPublicListings();
+            } else if (viewName === 'orders') {
+                myOrdersView.classList.remove('hidden');
+                renderUserOrders();
+            } else if (viewName === 'admin') {
+                adminView.classList.remove('hidden');
+                renderAdminDashboard();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleAdminPanel() {
+            const adminView = document.getElementById('adminView');
+            if (adminView.classList.contains('hidden')) {
+                switchView('admin');
+            } else {
+                switchView('public');
+            }
+        }
+
+        function syncNavSearch(val) {
+            searchQuery = val.toLowerCase().trim();
+            renderPublicListings();
+        }
+
+        function setCategoryFilter(cat) {
+            currentCategory = cat;
+            const pills = document.querySelectorAll('.cat-pill');
+            pills.forEach(pill => {
+                if (pill.innerText.includes(cat)) {
+                    pill.className = 'cat-pill active px-4 py-2 rounded-xl text-xs font-bold bg-tg-blue text-white shadow-lg whitespace-nowrap transition-all';
+                } else {
+                    pill.className = 'cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-tg-cardBorder whitespace-nowrap transition-all';
+                }
+            });
+            renderPublicListings();
+        }
+
+        function resetFilters() {
+            currentCategory = 'All';
+            searchQuery = '';
+            document.getElementById('topNavSearch').value = '';
+            setCategoryFilter('All');
+        }
+
+        function renderPublicListings() {
+            const grid = document.getElementById('listingsGrid');
+            const emptyState = document.getElementById('emptyListings');
+            const sortVal = document.getElementById('sortSelect').value;
+
+            let activeListings = listings.filter(item => item.status === 'Active');
+
+            if (currentCategory !== 'All') {
+                activeListings = activeListings.filter(item => item.category === currentCategory);
+            }
+
+            if (searchQuery) {
+                activeListings = activeListings.filter(item => 
+                    item.title.toLowerCase().includes(searchQuery) ||
+                    item.desc.toLowerCase().includes(searchQuery) ||
+                    item.category.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // Sorting
+            if (sortVal === 'price-low') {
+                activeListings.sort((a, b) => a.price - b.price);
+            } else if (sortVal === 'price-high') {
+                activeListings.sort((a, b) => b.price - a.price);
+            } else if (sortVal === 'members') {
+                activeListings.sort((a, b) => b.members - a.members);
+            }
+
+            document.getElementById('filteredCountBadge').innerText = `${activeListings.length} Groups`;
+
+            if (activeListings.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = activeListings.map(item => {
+                const memCount = item.members >= 1000 ? (item.members / 1000).toFixed(1) + 'k' : item.members;
+                const fallbackImg = `https://placehold.co/150x150/0088cc/ffffff?text=${encodeURIComponent(item.title.substring(0,2))}`;
+
+                return `
+                <div class="glass-panel rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:border-tg-cyan/50 relative group">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-900 border border-tg-cardBorder text-tg-cyan uppercase">
+                                ${item.category}
+                            </span>
+                            ${item.verified ? `
+                                <span class="text-[10px] font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check"></i> VERIFIED
+                                </span>
+                            ` : ''}
+                        </div>
+
+                        <div class="flex items-center space-x-3 mb-3">
+                            <img src="${item.logoUrl || fallbackImg}" onerror="this.src='${fallbackImg}'" class="w-12 h-12 rounded-xl object-cover border border-tg-cardBorder shrink-0">
+                            <div>
+                                <h3 class="text-sm font-bold text-white group-hover:text-tg-cyan transition-colors line-clamp-1">${escapeHtml(item.title)}</h3>
+                                <p class="text-[11px] text-slate-400 font-semibold"><i class="fa-solid fa-users text-tg-cyan text-[10px]"></i> ${memCount} members</p>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-slate-300 line-clamp-2 leading-relaxed mb-4">${escapeHtml(item.desc)}</p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-tg-cardBorder mb-4">
+                            <span class="text-[11px] text-slate-400 font-medium">Access Fee:</span>
+                            <span class="text-base font-black text-emerald-400">₹${item.price.toLocaleString('en-IN')}</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="openGroupDetailsModal('${item.id}')" class="py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs border border-tg-cardBorder">
+                                Details
+                            </button>
+                            <button onclick="startCheckout('${item.id}')" class="py-2.5 rounded-xl bg-gradient-to-r from-tg-blue to-tg-cyan hover:opacity-95 text-white font-bold text-xs uppercase shadow-md shadow-tg-blue/20">
+                                Buy Access
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function openGroupDetailsModal(id) {
+            const item = listings.find(l => l.id === id);
+            if (!item) return;
+
+            document.getElementById('detailTitle').innerText = item.title;
+            document.getElementById('detailCat').innerText = item.category;
+            document.getElementById('detailMembers').innerText = `${item.members.toLocaleString()} verified members`;
+            document.getElementById('detailDesc').innerText = item.desc;
+            document.getElementById('detailPrice').innerText = `₹${item.price.toLocaleString('en-IN')}`;
+            document.getElementById('detailImg').src = item.logoUrl || `https://placehold.co/150x150/0088cc/ffffff?text=${encodeURIComponent(item.title.substring(0,2))}`;
+            
+            const buyBtn = document.getElementById('detailBuyBtn');
+            buyBtn.onclick = () => {
+                closeModal('detailsModal');
+                startCheckout(item.id);
+            };
+
+            document.getElementById('detailsModal').classList.remove('hidden');
+        }
+
+        function startCheckout(listingId) {
+            const item = listings.find(l => l.id === listingId);
+            if (!item) return;
+
+            currentActiveCheckoutOrder = {
+                groupId: item.id,
+                groupTitle: item.title,
+                price: item.price,
+                inviteLink: item.inviteLink
+            };
+
+            document.getElementById('checkoutGroupTitle').innerText = item.title;
+            document.getElementById('step1Price').innerText = `₹${item.price.toLocaleString('en-IN')}`;
+            document.getElementById('step2Price').innerText = `₹${item.price.toLocaleString('en-IN')}`;
+
+            showCheckoutStep(1);
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function showCheckoutStep(stepNum) {
+            document.getElementById('checkoutStep1').classList.add('hidden');
+            document.getElementById('checkoutStep2').classList.add('hidden');
+            document.getElementById('checkoutStep3').classList.add('hidden');
+
+            document.getElementById('stepDot1').className = 'w-8 h-2 rounded-full ' + (stepNum >= 1 ? 'bg-tg-cyan' : 'bg-slate-800');
+            document.getElementById('stepDot2').className = 'w-8 h-2 rounded-full ' + (stepNum >= 2 ? 'bg-tg-cyan' : 'bg-slate-800');
+            document.getElementById('stepDot3').className = 'w-8 h-2 rounded-full ' + (stepNum >= 3 ? 'bg-tg-cyan' : 'bg-slate-800');
+
+            document.getElementById(`checkoutStep${stepNum}`).classList.remove('hidden');
+        }
+
+        function goToCheckoutStep2() {
+            const handle = document.getElementById('chkTgHandle').value.replace('@','').trim();
+            if (!handle) {
+                showToast('Please enter your Telegram handle', 'error');
+                return;
+            }
+
+            currentActiveCheckoutOrder.tgHandle = handle;
+            currentActiveCheckoutOrder.contact = document.getElementById('chkContact').value.trim() || 'N/A';
+
+            // Generate Dynamic UPI QR Code URL
+            const upiId = upiSettings.upiId || 'telemarket@upi';
+            const payeeName = upiSettings.payeeName || 'TeleMarket Admin';
+            const price = currentActiveCheckoutOrder.price;
+
+            // standard UPI URI scheme: upi://pay?pa=...&pn=...&am=...&cu=INR
+            const upiString = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${price}&cu=INR&tn=${encodeURIComponent('Group Access ' + currentActiveCheckoutOrder.groupTitle)}`;
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
+
+            document.getElementById('upiQrImg').src = qrApiUrl;
+            document.getElementById('upiIdDisplay').innerText = upiId;
+            document.getElementById('payAppBtn').href = upiString;
+
+            showCheckoutStep(2);
+        }
+
+        function copyUpiId() {
+            const upiId = upiSettings.upiId || 'telemarket@upi';
+            copyTextToClipboard(upiId);
+            showToast('UPI ID copied to clipboard!', 'success');
+        }
+
+        function submitPaymentUtr() {
+            const utr = document.getElementById('chkUtrInput').value.trim();
+            if (utr.length < 10) {
+                showToast('Please enter a valid 12-digit UTR Ref Number', 'error');
+                return;
+            }
+
+            const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+            
+            const newOrder = {
+                orderId: orderId,
+                groupId: currentActiveCheckoutOrder.groupId,
+                groupTitle: currentActiveCheckoutOrder.groupTitle,
+                price: currentActiveCheckoutOrder.price,
+                tgHandle: currentActiveCheckoutOrder.tgHandle,
+                contact: currentActiveCheckoutOrder.contact,
+                utr: utr,
+                status: 'Approved', // Auto-approved on timer completion
+                inviteLink: currentActiveCheckoutOrder.inviteLink,
+                timestamp: Date.now()
+            };
+
+            orders.unshift(newOrder);
+            saveApplicationState();
+
+            document.getElementById('displaySubmittedUtr').innerText = utr;
+            showCheckoutStep(3);
+            startTwoMinuteTimer(newOrder);
+        }
+
+        function startTwoMinuteTimer(orderObj) {
+            if (checkoutTimerInterval) clearInterval(checkoutTimerInterval);
+
+            let timeLeft = 120; // 2 minutes (120 seconds)
+            const timerDisplay = document.getElementById('timerDisplay');
+            const timerProgressBar = document.getElementById('timerProgressBar');
+            const timerStatusText = document.getElementById('timerStatusText');
+            const unlockedCard = document.getElementById('unlockedLinkCard');
+            const countdownBox = document.getElementById('countdownBox');
+
+            unlockedCard.classList.add('hidden');
+            countdownBox.classList.remove('hidden');
+
+            checkoutTimerInterval = setInterval(() => {
+                timeLeft--;
+
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                timerDisplay.innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+
+                const progressPercent = ((120 - timeLeft) / 120) * 100;
+                timerProgressBar.style.width = `${progressPercent}%`;
+
+                if (timeLeft > 80) {
+                    timerStatusText.innerText = '🔄 Step 1/3: Verifying UTR against bank ledger...';
+                } else if (timeLeft > 40) {
+                    timerStatusText.innerText = '⚡ Step 2/3: Generating private Telegram invite link...';
+                } else if (timeLeft > 0) {
+                    timerStatusText.innerText = '🔐 Step 3/3: Granting access permissions for @' + orderObj.tgHandle;
+                } else {
+                    clearInterval(checkoutTimerInterval);
+                    
+                    // Reveal unlocked link!
+                    document.getElementById('revealedInviteLink').innerText = orderObj.inviteLink;
+                    document.getElementById('joinGroupDirectBtn').href = orderObj.inviteLink;
+
+                    timerStatusText.innerText = '✅ Access Delivered!';
+                    unlockedCard.classList.remove('hidden');
+                    showToast('🎉 Access Granted! Telegram link unlocked.', 'success');
+                }
+            }, 1000);
+        }
+
+        function copyRevealedLink() {
+            const link = document.getElementById('revealedInviteLink').innerText;
+            copyTextToClipboard(link);
+            showToast('Invite link copied!', 'success');
+        }
+
+        function renderUserOrders() {
+            const container = document.getElementById('userOrdersList');
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="glass-panel p-8 rounded-2xl text-center text-slate-400 text-xs">
+                        No purchase history found.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = orders.map(ord => {
+                return `
+                <div class="glass-panel p-5 rounded-2xl border border-tg-cardBorder flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-1">
+                            <span class="font-mono text-xs text-tg-cyan font-bold">${ord.orderId}</span>
+                            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                                ${ord.status}
+                            </span>
+                        </div>
+                        <h4 class="text-base font-bold text-white">${escapeHtml(ord.groupTitle)}</h4>
+                        <p class="text-xs text-slate-400">Buyer: @${escapeHtml(ord.tgHandle)} | UTR: <span class="font-mono text-slate-300">${escapeHtml(ord.utr)}</span></p>
+                    </div>
+
+                    <div class="flex items-center space-x-3 justify-between md:justify-end border-t md:border-t-0 border-tg-cardBorder pt-3 md:pt-0">
+                        <span class="text-lg font-black text-emerald-400">₹${ord.price.toLocaleString('en-IN')}</span>
+                        <a href="${ord.inviteLink}" target="_blank" class="px-4 py-2 rounded-xl bg-tg-blue hover:bg-tg-cyan text-white text-xs font-bold flex items-center space-x-1.5 shadow">
+                            <i class="fa-brands fa-telegram"></i>
+                            <span>Join Group</span>
+                        </a>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function renderAdminDashboard() {
+            // Update stats
+            const totalRev = orders.filter(o => o.status === 'Approved').reduce((a,c) => a + (c.price || 0), 0);
+            document.getElementById('admRevTotal').innerText = `₹${totalRev.toLocaleString('en-IN')}`;
+            document.getElementById('admListingsCount').innerText = listings.length;
+            document.getElementById('admPendingCount').innerText = orders.filter(o => o.status === 'Pending Verification').length;
+            document.getElementById('admCompletedCount').innerText = orders.filter(o => o.status === 'Approved').length;
+
+            // Load UPI inputs
+            document.getElementById('admUpiId').value = upiSettings.upiId || 'telemarket@upi';
+            document.getElementById('admPayeeName').value = upiSettings.payeeName || 'TeleMarket Admin';
+            updateAdminQrPreview();
+
+            // Render tables
+            renderAdminListingsTable();
+            renderAdminOrdersTable();
+        }
+
+        function saveAdminUpiSettings(e) {
+            e.preventDefault();
+            upiSettings.upiId = document.getElementById('admUpiId').value.trim();
+            upiSettings.payeeName = document.getElementById('admPayeeName').value.trim();
+            saveApplicationState();
+            updateAdminQrPreview();
+            showToast('UPI payment settings updated!', 'success');
+        }
+
+        function updateAdminQrPreview() {
+            const upiId = upiSettings.upiId || 'telemarket@upi';
+            const payee = upiSettings.payeeName || 'TeleMarket Admin';
+            const upiString = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payee)}&am=100&cu=INR`;
+            
+            document.getElementById('admQrPreviewImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}`;
+            document.getElementById('admUpiPreviewText').innerText = upiId;
+        }
+
+        function renderAdminListingsTable() {
+            const tbody = document.getElementById('admListingsTableBody');
+            tbody.innerHTML = listings.map(item => `
+                <tr class="hover:bg-slate-900/50">
+                    <td class="py-3 px-3 font-semibold text-white">${escapeHtml(item.title)}</td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-slate-900 border border-tg-cardBorder text-[10px]">${item.category}</span></td>
+                    <td class="py-3 px-3 font-mono">${item.members.toLocaleString()}</td>
+                    <td class="py-3 px-3 font-extrabold text-emerald-400">₹${item.price.toLocaleString()}</td>
+                    <td class="py-3 px-3">
+                        <button onclick="toggleGroupStatus('${item.id}')" class="px-2 py-0.5 rounded-full text-[10px] font-bold ${item.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'}">
+                            ${item.status}
+                        </button>
+                    </td>
+                    <td class="py-3 px-3 text-right space-x-1">
+                        <button onclick="editGroup('${item.id}')" class="p-1.5 rounded bg-slate-800 text-tg-cyan hover:bg-slate-700"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteGroup('${item.id}')" class="p-1.5 rounded bg-slate-800 text-rose-400 hover:bg-rose-950"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAdminOrdersTable() {
+            const tbody = document.getElementById('admOrdersTableBody');
+            tbody.innerHTML = orders.map(ord => `
+                <tr class="hover:bg-slate-900/50">
+                    <td class="py-3 px-4 font-mono text-tg-cyan font-bold">${ord.orderId}</td>
+                    <td class="py-3 px-4 font-bold text-white">@${escapeHtml(ord.tgHandle)}</td>
+                    <td class="py-3 px-4 text-slate-300">${escapeHtml(ord.groupTitle)}</td>
+                    <td class="py-3 px-4 font-extrabold text-emerald-400">₹${ord.price.toLocaleString()}</td>
+                    <td class="py-3 px-4 font-mono text-xs text-amber-300">${escapeHtml(ord.utr)}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                            ${ord.status}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        <a href="${ord.inviteLink}" target="_blank" class="px-2.5 py-1 rounded bg-tg-blue hover:bg-tg-cyan text-white text-[10px] font-bold">
+                            View Link
+                        </a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openAddGroupModal() {
+            document.getElementById('groupModalHeading').innerText = '➕ Add Telegram Group';
+            document.getElementById('groupForm').reset();
+            document.getElementById('grpEditId').value = '';
+            document.getElementById('addGroupModal').classList.remove('hidden');
+        }
+
+        function editGroup(id) {
+            const item = listings.find(l => l.id === id);
+            if (!item) return;
+
+            document.getElementById('groupModalHeading').innerText = '✏️ Edit Telegram Group';
+            document.getElementById('grpEditId').value = item.id;
+            document.getElementById('grpTitle').value = item.title;
+            document.getElementById('grpCategory').value = item.category;
+            document.getElementById('grpMembers').value = item.members;
+            document.getElementById('grpPrice').value = item.price;
+            document.getElementById('grpVerified').value = item.verified ? 'true' : 'false';
+            document.getElementById('grpInviteLink').value = item.inviteLink;
+            document.getElementById('grpLogoUrl').value = item.logoUrl || '';
+            document.getElementById('grpDesc').value = item.desc;
+
+            document.getElementById('addGroupModal').classList.remove('hidden');
+        }
+
+        function handleSaveGroup(e) {
+            e.preventDefault();
+            const editId = document.getElementById('grpEditId').value;
+
+            const newObj = {
+                id: editId || ('grp-' + Math.floor(100 + Math.random() * 900)),
+                title: document.getElementById('grpTitle').value.trim(),
+                category: document.getElementById('grpCategory').value,
+                members: parseInt(document.getElementById('grpMembers').value),
+                price: parseInt(document.getElementById('grpPrice').value),
+                verified: document.getElementById('grpVerified').value === 'true',
+                inviteLink: document.getElementById('grpInviteLink').value.trim(),
+                logoUrl: document.getElementById('grpLogoUrl').value.trim(),
+                desc: document.getElementById('grpDesc').value.trim(),
+                status: 'Active'
+            };
+
+            if (editId) {
+                const idx = listings.findIndex(l => l.id === editId);
+                if (idx !== -1) listings[idx] = newObj;
+            } else {
+                listings.unshift(newObj);
+            }
+
+            saveApplicationState();
+            closeModal('addGroupModal');
+            renderAdminDashboard();
+            renderPublicListings();
+            showToast('Group listing saved successfully!', 'success');
+        }
+
+        function toggleGroupStatus(id) {
+            const idx = listings.findIndex(l => l.id === id);
+            if (idx !== -1) {
+                listings[idx].status = listings[idx].status === 'Active' ? 'Inactive' : 'Active';
+                saveApplicationState();
+                renderAdminDashboard();
+                renderPublicListings();
+            }
+        }
+
+        function deleteGroup(id) {
+            listings = listings.filter(l => l.id !== id);
+            saveApplicationState();
+            renderAdminDashboard();
+            renderPublicListings();
+            showToast('Group listing deleted', 'error');
+        }
+
+        function updateHeaderBadgesAndStats() {
+            const activeCount = listings.filter(l => l.status === 'Active').length;
+            const totalMembers = listings.filter(l => l.status === 'Active').reduce((a,c) => a + c.members, 0);
+
+            document.getElementById('statActiveGroups').innerText = activeCount;
+            document.getElementById('statTotalMembers').innerText = totalMembers >= 1000 ? (totalMembers/1000).toFixed(0) + 'k+' : totalMembers;
+
+            const badge = document.getElementById('userOrdersCountBadge');
+            if (orders.length > 0) {
+                badge.innerText = orders.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            if (modalId === 'checkoutModal' && checkoutTimerInterval) {
+                clearInterval(checkoutTimerInterval);
+            }
+        }
+
+        function copyTextToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text);
+            } else {
+                const el = document.createElement('textarea');
+                el.value = text;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            }
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let bg = 'bg-slate-900 border-tg-cardBorder text-white';
+            if (type === 'success') bg = 'bg-emerald-950 border-emerald-500/50 text-emerald-200';
+            if (type === 'error') bg = 'bg-rose-950 border-rose-500/50 text-rose-200';
+
+            toast.className = `px-4 py-3 rounded-xl border ${bg} text-xs font-bold shadow-xl pointer-events-auto transition-all transform translate-y-2 flex items-center space-x-2`;
+            toast.innerHTML = `<span>${msg}</span>`;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadApplicationState();
+            renderPublicListings();
+            updateHeaderBadgesAndStats();
+        });
+    </script>
+</body>
+</html>
